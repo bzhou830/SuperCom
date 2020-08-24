@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ComDev
 {
-    public class crc
+    public class CRC
     {
         /// <summary>
         /// CRC16 

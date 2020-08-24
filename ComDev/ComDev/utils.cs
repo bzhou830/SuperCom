@@ -22,12 +22,12 @@ namespace ComDev
                     }
                     else
                     {
-                        dData = int.Parse(strData, System.Globalization.NumberStyles.Integer);
+                        dData = int.Parse(strData, System.Globalization.NumberStyles.HexNumber);
                     }
                 }
                 else
                 {
-                    dData = int.Parse(strData, System.Globalization.NumberStyles.Integer);
+                    dData = int.Parse(strData, System.Globalization.NumberStyles.HexNumber);
                 }
             }
             catch (Exception)

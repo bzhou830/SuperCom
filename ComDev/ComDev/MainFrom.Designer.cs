@@ -35,9 +35,12 @@
             this.tabPageData = new System.Windows.Forms.TabPage();
             this.zGraph1 = new ZhengJuyin.UI.ZGraph();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.textBoxTimeVal = new System.Windows.Forms.TextBox();
+            this.buttonTimer = new System.Windows.Forms.Button();
+            this.label26 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txSend = new System.Windows.Forms.TextBox();
-            this.buttonTimer = new System.Windows.Forms.Button();
             this.buttonSend = new System.Windows.Forms.Button();
             this.checkBoxNewlineSend = new System.Windows.Forms.CheckBox();
             this.labelSendCount = new System.Windows.Forms.Label();
@@ -126,6 +129,7 @@
             this.tabViewer.SuspendLayout();
             this.tabPageData.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -210,7 +214,7 @@
             this.zGraph1.m_iLineShowColorAlpha = 100;
             this.zGraph1.m_SySnameX = "X轴坐标";
             this.zGraph1.m_SySnameY = "Y轴坐标";
-            this.zGraph1.m_SyStitle = "下位机数据";
+            this.zGraph1.m_SyStitle = "";
             this.zGraph1.m_titleBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
             this.zGraph1.m_titleColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.zGraph1.m_titlePosition = 0.4F;
@@ -223,6 +227,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.txGet);
@@ -239,17 +244,55 @@
             this.tabPage1.Text = "设置";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.textBoxTimeVal);
+            this.groupBox5.Controls.Add(this.buttonTimer);
+            this.groupBox5.Controls.Add(this.label26);
+            this.groupBox5.Location = new System.Drawing.Point(447, 345);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(186, 91);
+            this.groupBox5.TabIndex = 96;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "定时发送";
+            // 
+            // textBoxTimeVal
+            // 
+            this.textBoxTimeVal.Location = new System.Drawing.Point(8, 46);
+            this.textBoxTimeVal.Name = "textBoxTimeVal";
+            this.textBoxTimeVal.Size = new System.Drawing.Size(75, 21);
+            this.textBoxTimeVal.TabIndex = 95;
+            this.textBoxTimeVal.Text = "1000";
+            // 
+            // buttonTimer
+            // 
+            this.buttonTimer.Location = new System.Drawing.Point(104, 32);
+            this.buttonTimer.Name = "buttonTimer";
+            this.buttonTimer.Size = new System.Drawing.Size(75, 35);
+            this.buttonTimer.TabIndex = 93;
+            this.buttonTimer.Text = "定时发送";
+            this.buttonTimer.UseVisualStyleBackColor = true;
+            this.buttonTimer.Click += new System.EventHandler(this.buttonTimer_Click);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(10, 27);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(77, 12);
+            this.label26.TabIndex = 5;
+            this.label26.Text = "定时时间(ms)";
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.txSend);
-            this.groupBox2.Controls.Add(this.buttonTimer);
             this.groupBox2.Controls.Add(this.buttonSend);
             this.groupBox2.Controls.Add(this.checkBoxNewlineSend);
             this.groupBox2.Controls.Add(this.labelSendCount);
             this.groupBox2.Controls.Add(this.checkBoxHexSend);
             this.groupBox2.Location = new System.Drawing.Point(11, 345);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(624, 91);
+            this.groupBox2.Size = new System.Drawing.Size(421, 91);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "手动发送数据";
@@ -259,25 +302,15 @@
             this.txSend.Location = new System.Drawing.Point(8, 24);
             this.txSend.Multiline = true;
             this.txSend.Name = "txSend";
-            this.txSend.Size = new System.Drawing.Size(354, 41);
+            this.txSend.Size = new System.Drawing.Size(233, 41);
             this.txSend.TabIndex = 1;
-            // 
-            // buttonTimer
-            // 
-            this.buttonTimer.Location = new System.Drawing.Point(535, 24);
-            this.buttonTimer.Name = "buttonTimer";
-            this.buttonTimer.Size = new System.Drawing.Size(75, 41);
-            this.buttonTimer.TabIndex = 4;
-            this.buttonTimer.Text = "定时发送";
-            this.buttonTimer.UseVisualStyleBackColor = true;
-            this.buttonTimer.Click += new System.EventHandler(this.buttonTimer_Click);
             // 
             // buttonSend
             // 
-            this.buttonSend.Location = new System.Drawing.Point(368, 23);
+            this.buttonSend.Location = new System.Drawing.Point(247, 23);
             this.buttonSend.Name = "buttonSend";
-            this.buttonSend.Size = new System.Drawing.Size(75, 21);
-            this.buttonSend.TabIndex = 4;
+            this.buttonSend.Size = new System.Drawing.Size(43, 42);
+            this.buttonSend.TabIndex = 94;
             this.buttonSend.Text = "发送";
             this.buttonSend.UseVisualStyleBackColor = true;
             this.buttonSend.Click += new System.EventHandler(this.buttonSend_Click);
@@ -285,7 +318,7 @@
             // checkBoxNewlineSend
             // 
             this.checkBoxNewlineSend.AutoSize = true;
-            this.checkBoxNewlineSend.Location = new System.Drawing.Point(132, 69);
+            this.checkBoxNewlineSend.Location = new System.Drawing.Point(119, 69);
             this.checkBoxNewlineSend.Name = "checkBoxNewlineSend";
             this.checkBoxNewlineSend.Size = new System.Drawing.Size(72, 16);
             this.checkBoxNewlineSend.TabIndex = 2;
@@ -295,7 +328,7 @@
             // labelSendCount
             // 
             this.labelSendCount.AutoSize = true;
-            this.labelSendCount.Location = new System.Drawing.Point(380, 53);
+            this.labelSendCount.Location = new System.Drawing.Point(213, 71);
             this.labelSendCount.Name = "labelSendCount";
             this.labelSendCount.Size = new System.Drawing.Size(41, 12);
             this.labelSendCount.TabIndex = 5;
@@ -304,7 +337,7 @@
             // checkBoxHexSend
             // 
             this.checkBoxHexSend.AutoSize = true;
-            this.checkBoxHexSend.Location = new System.Drawing.Point(12, 69);
+            this.checkBoxHexSend.Location = new System.Drawing.Point(6, 69);
             this.checkBoxHexSend.Name = "checkBoxHexSend";
             this.checkBoxHexSend.Size = new System.Drawing.Size(84, 16);
             this.checkBoxHexSend.TabIndex = 2;
@@ -429,15 +462,15 @@
             this.txGet.Multiline = true;
             this.txGet.Name = "txGet";
             this.txGet.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txGet.Size = new System.Drawing.Size(624, 204);
+            this.txGet.Size = new System.Drawing.Size(624, 193);
             this.txGet.TabIndex = 1;
             // 
             // txData
             // 
-            this.txData.Location = new System.Drawing.Point(66, 303);
+            this.txData.Location = new System.Drawing.Point(66, 288);
             this.txData.Multiline = true;
             this.txData.Name = "txData";
-            this.txData.Size = new System.Drawing.Size(567, 32);
+            this.txData.Size = new System.Drawing.Size(567, 47);
             this.txData.TabIndex = 1;
             // 
             // labelGetCount
@@ -462,7 +495,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 312);
+            this.label1.Location = new System.Drawing.Point(3, 305);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 12);
             this.label1.TabIndex = 6;
@@ -552,7 +585,7 @@
             this.comboBoxBx4.Name = "comboBoxBx4";
             this.comboBoxBx4.Size = new System.Drawing.Size(53, 20);
             this.comboBoxBx4.TabIndex = 108;
-            this.comboBoxBx4.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot4_SelectedIndexChanged);
+            this.comboBoxBx4.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot_SelectedIndexChanged);
             // 
             // comboBoxBx3
             // 
@@ -561,7 +594,7 @@
             this.comboBoxBx3.Name = "comboBoxBx3";
             this.comboBoxBx3.Size = new System.Drawing.Size(53, 20);
             this.comboBoxBx3.TabIndex = 107;
-            this.comboBoxBx3.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot3_SelectedIndexChanged);
+            this.comboBoxBx3.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot_SelectedIndexChanged);
             // 
             // comboBoxBx2
             // 
@@ -570,7 +603,7 @@
             this.comboBoxBx2.Name = "comboBoxBx2";
             this.comboBoxBx2.Size = new System.Drawing.Size(53, 20);
             this.comboBoxBx2.TabIndex = 106;
-            this.comboBoxBx2.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot2_SelectedIndexChanged);
+            this.comboBoxBx2.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot_SelectedIndexChanged);
             // 
             // comboBoxBx1
             // 
@@ -579,7 +612,7 @@
             this.comboBoxBx1.Name = "comboBoxBx1";
             this.comboBoxBx1.Size = new System.Drawing.Size(53, 20);
             this.comboBoxBx1.TabIndex = 105;
-            this.comboBoxBx1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot1_SelectedIndexChanged);
+            this.comboBoxBx1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlot_SelectedIndexChanged);
             // 
             // label25
             // 
@@ -908,6 +941,7 @@
             this.buttonEnterInput.TabIndex = 10;
             this.buttonEnterInput.Text = "确认输入";
             this.buttonEnterInput.UseVisualStyleBackColor = true;
+            this.buttonEnterInput.Click += new System.EventHandler(this.buttonEnterInput_Click);
             // 
             // textBoxCmd7
             // 
@@ -1062,6 +1096,8 @@
             this.tabPageData.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -1087,8 +1123,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txSend;
-        private System.Windows.Forms.Button buttonTimer;
-        private System.Windows.Forms.Button buttonSend;
         private System.Windows.Forms.CheckBox checkBoxNewlineSend;
         private System.Windows.Forms.Label labelSendCount;
         private System.Windows.Forms.CheckBox checkBoxHexSend;
@@ -1169,6 +1203,11 @@
         private System.Windows.Forms.TextBox textBoxStat00;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button buttonTimer;
+        private System.Windows.Forms.TextBox textBoxTimeVal;
+        private System.Windows.Forms.Button buttonSend;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label26;
     }
 }
 

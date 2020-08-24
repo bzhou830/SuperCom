@@ -16,38 +16,39 @@ namespace ComDev
     public partial class MainFrom : Form
     {
         private SerialPort comm = new SerialPort();
-        private StringBuilder builder = new StringBuilder();    //避免在事件处理方法中反复的创建，定义到外面。
-        private long receivedCount = 0;                         //接收计数
-        private long sendCount = 0;                             //发送计数
-        private bool Listening = false;                         //是否没有执行完invoke相关操作
-        private bool commClosing = false;                       //是否正在关闭串口，执行Application.DoEvents，并阻止再次invoke
-        private List<byte> buffer = new List<byte>(4096);       //默认分配1页内存，并始终限制不允许超过
+        private StringBuilder builder = new StringBuilder();            //避免在事件处理方法中反复的创建，定义到外面。
+        private long receivedCount = 0;                                 //接收计数
+        private long sendCount = 0;                                     //发送计数
+        private bool Listening = false;                                 //是否没有执行完invoke相关操作
+        private bool commClosing = false;                               //是否正在关闭串口，执行Application.DoEvents，并阻止再次invoke
+        private List<byte> buffer = new List<byte>(4096);               //默认分配1页内存，并始终限制不允许超过
         private byte[] binary_data_1 = new byte[32 + MIN_COUNT];
         private short[] inputData = new short[8]; 
 
-        private const int MIN_COUNT = 5;                        //接收最小数据包长度
+        private const int MIN_COUNT = 5;                                //接收最小数据包长度
         RevData rev;
         private bool timerOpened = false;
 
         // 波形图控件属性
-        private Color[] waveContrlColors;
-        private float waveFStyle;
-        private int[] waveIStyle;
+        //private Color[] waveContrlColors;
+        //private float waveFStyle;
+        //private int[] waveIStyle;
 
         // 波形图中的数据
         public List<float>[] x = { new List<float>(), new List<float>(), new List<float>(), new List<float>() };
         public List<float>[] y = { new List<float>(), new List<float>(), new List<float>(), new List<float>() };
 
         public SentData sentData;
+
         public void initSendData()
         {
-            sentData.addr = 0x11;               //0x11,                               // 地址
-            sentData.funcCode = 0x17;               //0x17,                               // 功能码
-            sentData.statAddr = 0x0020;             //0x20, 0x00,                         // 读状态寄存器起始地址
-            sentData.statNum = 0x1000;             //0x00, 0x10,                         // 读状态寄存器数量
-            sentData.cmdAddr = 0x0030;             //0x30, 0x00,                         // 写命令寄存器起始地址
-            sentData.cmdNum = 0x0800;             //0x00, 0x08,                         // 写命令寄存器数量
-            sentData.cmdBytes = 0x10;               //0x10,                               // 写命令寄存器字节数
+            sentData.addr       = 0x11;                 //0x11,                               // 地址
+            sentData.funcCode   = 0x17;                 //0x17,                               // 功能码
+            sentData.statAddr   = 0x0020;               //0x20, 0x00,                         // 读状态寄存器起始地址
+            sentData.statNum    = 0x1000;               //0x00, 0x10,                         // 读状态寄存器数量
+            sentData.cmdAddr    = 0x0030;               //0x30, 0x00,                         // 写命令寄存器起始地址
+            sentData.cmdNum     = 0x0800;               //0x00, 0x08,                         // 写命令寄存器数量
+            sentData.cmdBytes   = 0x10;                 //0x10,                               // 写命令寄存器字节数
         }
 
 
@@ -79,13 +80,11 @@ namespace ComDev
             comboBoxStopBits.Items.AddRange(stopBits);
             comboBoxStopBits.SelectedIndex = 0;
 
-
-            string[] PlotNames =
-                {   "St00", "St01", "St02", "St03",
+            string[] PlotNames = {"St00", "St01", "St02", "St03",
                     "St04", "St05", "St06", "St07",
                     "St08", "St09", "St10", "St11",
-                    "St12", "St13", "St14", "St15"
-            };
+                    "St12", "St13", "St14", "St15"};
+
             comboBoxBx1.Items.AddRange(PlotNames);
             comboBoxBx1.SelectedIndex = 0;
 
@@ -100,24 +99,28 @@ namespace ComDev
 
             //初始化SerialPort对象
             comm.NewLine = "/r/n";
-            comm.RtsEnable = true;//根据实际情况吧。
+            comm.RtsEnable = true;          //根据实际情况
+            
             //添加事件注册
             comm.DataReceived += commDataReceived;
 
             initSendData();
             buttonEnterInput_Click(sender, e);
 
+            //初始化波形控件
             zGraph1.f_ClearAllPix();
             zGraph1.f_reXY();
+
             zGraph1.f_LoadOnePix(ref x[0], ref y[0], Color.Red, 2);
             zGraph1.f_AddPix(ref x[1], ref y[1], Color.Blue, 2);
             zGraph1.f_AddPix(ref x[2], ref y[2], Color.FromArgb(0, 128, 192), 2);
             zGraph1.f_AddPix(ref x[3], ref y[3], Color.Yellow, 2);
+
         }
 
 
         /// <summary>
-        /// 高8bit和低8bit互换
+        ///short数据的高8bit和低8bit互换
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
@@ -133,9 +136,8 @@ namespace ComDev
             return (short)v;
         }
 
-
         /// <summary>
-        /// 生成要发送的数据报文
+        /// 生成要发送的数据报文，只填入数据，不带CRC
         /// </summary>
         public void generateSendData()
         {
@@ -147,16 +149,6 @@ namespace ComDev
             sentData.content6 = inputData[5];
             sentData.content7 = inputData[6];
             sentData.content8 = inputData[7];
-
-            //sentData.content1 = highLowSwitch(int.Parse(textBoxCmd0.Text));
-            //sentData.content2 = highLowSwitch(int.Parse(textBoxCmd1.Text));
-            //sentData.content3 = highLowSwitch(int.Parse(textBoxCmd2.Text));
-            //sentData.content4 = highLowSwitch(int.Parse(textBoxCmd3.Text));
-            //sentData.content5 = highLowSwitch(int.Parse(textBoxCmd4.Text));
-            //sentData.content6 = highLowSwitch(int.Parse(textBoxCmd5.Text));
-            //sentData.content7 = highLowSwitch(int.Parse(textBoxCmd6.Text));
-            //sentData.content8 = highLowSwitch(int.Parse(textBoxCmd7.Text));
-
             //sentData.crcH = 0xaa;
             //sentData.crcL = 0x55;
         }
@@ -177,7 +169,7 @@ namespace ComDev
                 comm.Read(buf, 0, n);               //读取缓冲数据
 
                 //<协议解析>
-                bool data_1_catched = false;//缓存记录数据是否捕获到
+                bool data_1_catched = false;        //缓存记录数据是否捕获到
                 //1.缓存数据
                 buffer.AddRange(buf);
                 //2.完整性判断
@@ -186,19 +178,21 @@ namespace ComDev
                     // 查找数据头, 地址, 功能码
                     if (buffer[0] == 0x11 && buffer[1] == 0x17)
                     {
-                        // 探测缓存数据是否有一条数据的字节，如果不够，就不用费劲的做其他验证了
+                        //探测缓存数据是否有一条数据的字节，如果不够，就不用费劲的做其他验证了
                         //前面已经限定了剩余长度>=4，那我们这里一定能访问到buffer[2]这个长度
                         int len = buffer[2];                            // 有效的数据长度
+                        
+                        //异常码, 数据协议和原数据不同
                         if (len == 0x80)
                         {
                             len = 7;
                             MessageBox.Show("出现异常码");
                         }
-                            
-
+                         
                         // 数据不够的时候支持跳出
                         if (buffer.Count < len + MIN_COUNT)
                             break;
+                        
                         /*
                         // 校验数据，确认数据正确
                         byte checksum = 0;
@@ -212,6 +206,7 @@ namespace ComDev
                             continue;                                   //继续下一次循环
                         }
                         */
+
                         buffer.CopyTo(0, binary_data_1, 0, len + MIN_COUNT);    //复制一条完整数据到具体的数据缓存
                         data_1_catched = true;
                         buffer.RemoveRange(0, len + MIN_COUNT);                 //正确分析一条数据，从缓存中移除数据。
@@ -229,7 +224,7 @@ namespace ComDev
                     //string data = binary_data_1[3].ToString("X2") + " " + binary_data_1[4].ToString("X2") + " " +
                     //    binary_data_1[5].ToString("X2") + " " + binary_data_1[6].ToString("X2") + " " +
                     //    binary_data_1[7].ToString("X2");
-                    string data = "111";
+                    string data = binary_data_1.ToString();
 
                     rev.content0 = byte2Short(binary_data_1[3], binary_data_1[4]);
                     rev.content1 = byte2Short(binary_data_1[5], binary_data_1[6]);
@@ -251,7 +246,10 @@ namespace ComDev
                     //更新界面
                     this.Invoke((EventHandler)(delegate
                     {
+                        // 接受数据框数据更新
                         txData.Text = data;
+
+                        //状态寄存器数据更新
                         textBoxStat00.Text = rev.content0.ToString("X2");
                         textBoxStat01.Text = rev.content1.ToString("X2");
                         textBoxStat02.Text = rev.content2.ToString("X2");
@@ -270,123 +268,20 @@ namespace ComDev
                         textBoxStat15.Text = rev.content15.ToString("X2");
 
                         //添加到曲线
-                        switch (comboBoxBx1.Items.IndexOf(comboBoxBx1.Text))
-                        {
-                            case 0: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content0)); break;
-                            case 1: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content1)); break;
-                            case 2: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content2)); break;
-                            case 3: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content3)); break;
-                            case 4: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content4)); break;
-                            case 5: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content5)); break;
-                            case 6: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content6)); break;
-                            case 7: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content7)); break;
-                            case 8: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content8)); break;
-                            case 9: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content9)); break;
-                            case 10: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content10)); break;
-                            case 11: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content11)); break;
-                            case 12: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content12)); break;
-                            case 13: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content13)); break;
-                            case 14: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content14)); break;
-                            case 15: x[0].Add((float)(x[0].Count + 1)); y[0].Add((float)((float)rev.content15)); break;
-                        }
+                        addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 0);
+                        addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 1);
+                        addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 2);
+                        addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 3);
 
-                        switch (comboBoxBx2.Items.IndexOf(comboBoxBx2.Text))
-                        {
-                            case 0: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content0)); break;
-                            case 1: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content1)); break;
-                            case 2: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content2)); break;
-                            case 3: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content3)); break;
-                            case 4: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content4)); break;
-                            case 5: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content5)); break;
-                            case 6: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content6)); break;
-                            case 7: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content7)); break;
-                            case 8: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content8)); break;
-                            case 9: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content9)); break;
-                            case 10: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content10)); break;
-                            case 11: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content11)); break;
-                            case 12: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content12)); break;
-                            case 13: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content13)); break;
-                            case 14: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content14)); break;
-                            case 15: x[1].Add((float)(x[1].Count + 1)); y[1].Add((float)((float)rev.content15)); break;
-                        }
-
-                        switch (comboBoxBx3.Items.IndexOf(comboBoxBx3.Text))
-                        {
-                            case 0: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content0)); break;
-                            case 1: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content1)); break;
-                            case 2: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content2)); break;
-                            case 3: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content3)); break;
-                            case 4: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content4)); break;
-                            case 5: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content5)); break;
-                            case 6: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content6)); break;
-                            case 7: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content7)); break;
-                            case 8: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content8)); break;
-                            case 9: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content9)); break;
-                            case 10: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content10)); break;
-                            case 11: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content11)); break;
-                            case 12: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content12)); break;
-                            case 13: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content13)); break;
-                            case 14: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content14)); break;
-                            case 15: x[2].Add((float)(x[2].Count + 1)); y[2].Add((float)((float)rev.content15)); break;
-                        }
-
-                        switch (comboBoxBx4.Items.IndexOf(comboBoxBx4.Text))
-                        {
-                            case 0: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content0)); break;
-                            case 1: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content1)); break;
-                            case 2: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content2)); break;
-                            case 3: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content3)); break;
-                            case 4: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content4)); break;
-                            case 5: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content5)); break;
-                            case 6: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content6)); break;
-                            case 7: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content7)); break;
-                            case 8: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content8)); break;
-                            case 9: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content9)); break;
-                            case 10: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content10)); break;
-                            case 11: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content11)); break;
-                            case 12: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content12)); break;
-                            case 13: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content13)); break;
-                            case 14: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content14)); break;
-                            case 15: x[3].Add((float)(x[3].Count + 1)); y[3].Add((float)((float)rev.content15)); break;
-                        }
                         zGraph1.f_Refresh();
                     }));
                 }
             }
-            /*
-            //如果需要别的协议，只要扩展这个data_n_catched就可以了。往往我们协议多的情况下，还会包含数据编号，给来的数据进行
-            //编号，协议优化后就是： 头+编号+长度+数据+校验
-            //</协议解析>
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            builder.Clear();//清除字符串构造器的内容
-            //因为要访问ui资源，所以需要使用invoke方式同步ui。
-            this.Invoke((EventHandler)(delegate
-            {
-                //判断是否是显示为16禁止
-                if (checkBoxHexView.Checked)
-                {
-                    //依次的拼接出16进制字符串
-                    foreach (byte b in buf)
-                    {
-                        builder.Append(b.ToString("X2") + " ");
-                    }
-                }
-                else
-                {
-                    //直接按ASCII规则转换成字符串
-                    builder.Append(Encoding.ASCII.GetString(buf));
-                }
-                //追加的形式添加到文本框末端，并滚动到最后。
-                this.txGet.AppendText(builder.ToString());
-                //修改接收计数
-                labelGetCount.Text = "Get:" + receivedCount.ToString();
-            }));*/
             finally
             {
-                Listening = false; //用完了，ui可以关闭串口了。
+                Listening = false; //用完了，ui可以关闭串口
             }
         }
-
 
         private void buttonOpenClose_Click(object sender, EventArgs e)
         {
@@ -472,32 +367,29 @@ namespace ComDev
             generateSendData();
             byte[] d   = structTransform.StructToBytes(sentData);
             
-            byte[] CRC = crc.ModbusCrc16Calc(d);
+            byte[] CRC = ComDev.CRC.ModbusCrc16Calc(d);
             d[d.Length - 2] = CRC[0];
             d[d.Length - 1] = CRC[1];
             if (comm.IsOpen)
             {
                 comm.Write(d, 0, 13 + 16);
             }
-
-            ///////
-            //////
-            //zGraph1.f_ClearAllPix();
-            /*
-            zGraph1.f_ClearAllPix();
-            zGraph1.f_reXY();
-            zGraph1.f_LoadOnePix(ref x1, ref y1, Color.Red, 1);
-            zGraph1.f_AddPix(ref x2, ref y2, Color.Blue, 1);
-            zGraph1.f_AddPix(ref x3, ref y3, Color.FromArgb(0, 128, 192), 1);
-            zGraph1.f_AddPix(ref x4, ref y4, Color.Yellow, 1);
-            zGraph1.f_Refresh();
-            */
         }
 
         private void buttonTimer_Click(object sender, EventArgs e)
         {
             if (!timerOpened)
             {
+                try
+                {
+                    timer1.Interval = int.Parse(textBoxTimeVal.Text);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("定时发送开启失败，因为数据设置错误！" + ex.ToString());
+                    return;
+                }
+
                 timer1.Start();
                 buttonTimer.Text = "关闭发送";
                 timerOpened = true;
@@ -514,7 +406,7 @@ namespace ComDev
         {
             generateSendData();
             byte[] d = structTransform.StructToBytes(sentData);
-            byte[] CRC = crc.ModbusCrc16Calc(d);
+            byte[] CRC = ComDev.CRC.ModbusCrc16Calc(d);
             d[d.Length - 2] = CRC[0];
             d[d.Length - 1] = CRC[1];
 
@@ -547,37 +439,40 @@ namespace ComDev
             }
         }
 
+        private void addDataToWave(int sourceId, int waveId)
+        {
+            switch (sourceId)
+            {
+                case 0: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content0)); break;
+                case 1: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content1)); break;
+                case 2: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content2)); break;
+                case 3: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content3)); break;
+                case 4: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content4)); break;
+                case 5: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content5)); break;
+                case 6: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content6)); break;
+                case 7: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content7)); break;
+                case 8: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content8)); break;
+                case 9: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content9)); break;
+                case 10: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content10)); break;
+                case 11: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content11)); break;
+                case 12: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content12)); break;
+                case 13: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content13)); break;
+                case 14: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content14)); break;
+                case 15: x[waveId].Add((float)(x[waveId].Count + 1)); y[waveId].Add((float)((float)rev.content15)); break;
+            }
+        }
+
         // plot index changed, clear data.
-        private void comboBoxPlot1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            x[0].Clear();
-            x[1].Clear();
-            x[2].Clear();
-            x[3].Clear();
+            clearWaveData();
         }
 
-        private void comboBoxPlot2_SelectedIndexChanged(object sender, EventArgs e)
+        private void clearWaveData()
         {
-            x[0].Clear();
-            x[1].Clear();
-            x[2].Clear();
-            x[3].Clear();
-        }
-
-        private void comboBoxPlot3_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            x[0].Clear();
-            x[1].Clear();
-            x[2].Clear();
-            x[3].Clear();
-        }
-
-        private void comboBoxPlot4_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            x[0].Clear();
-            x[1].Clear();
-            x[2].Clear();
-            x[3].Clear();
+            for(int i = 0; i < 4; i++) {
+                x[i].Clear();
+            }
         }
     }
 }

@@ -53,7 +53,7 @@
   <ItemGroup>
     <Compile Include="protocal.cs" />
     <Compile Include="structTransform.cs" />
-    <Compile Include="crc.cs" />
+    <Compile Include="CRC.cs" />
     <Compile Include="FormUI.cs">
       <SubType>Form</SubType>
     </Compile>
