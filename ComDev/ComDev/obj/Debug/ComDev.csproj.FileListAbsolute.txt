@@ -18,7 +18,6 @@ C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Debug\ComDev.csproj.GenerateResour
 C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Debug\ComDev.exe
 C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Debug\ComDev.pdb
 C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Debug\ComDev.FormUI.resources
-C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Debug\ComDev.csprojResolveAssemblyReference.cache
 C:\Users\Bz\Desktop\ComDev\ComDev\bin\Debug\ComDev.exe.config
 C:\Users\Bz\Desktop\ComDev\ComDev\bin\Debug\ComDev.exe
 C:\Users\Bz\Desktop\ComDev\ComDev\bin\Debug\ComDev.pdb

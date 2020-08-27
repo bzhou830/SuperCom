@@ -139,7 +139,7 @@ namespace ComDev
         /// <summary>
         /// 生成要发送的数据报文，只填入数据，不带CRC
         /// </summary>
-        public void generateSendData()
+        public void genSendData()
         {
             sentData.content1 = inputData[0];
             sentData.content2 = inputData[1];
@@ -267,11 +267,11 @@ namespace ComDev
                         textBoxStat14.Text = rev.content14.ToString("X2");
                         textBoxStat15.Text = rev.content15.ToString("X2");
 
-                        //添加到曲线
+                        //添加到曲线， 数据源选项来源于4个combobox
                         addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 0);
-                        addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 1);
-                        addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 2);
-                        addDataToWave(comboBoxBx1.Items.IndexOf(comboBoxBx1.Text), 3);
+                        addDataToWave(comboBoxBx2.Items.IndexOf(comboBoxBx2.Text), 1);
+                        addDataToWave(comboBoxBx3.Items.IndexOf(comboBoxBx3.Text), 2);
+                        addDataToWave(comboBoxBx4.Items.IndexOf(comboBoxBx4.Text), 3);
 
                         zGraph1.f_Refresh();
                     }));
@@ -364,7 +364,7 @@ namespace ComDev
 
         private void buttonReset_Click(object sender, EventArgs e)
         {
-            generateSendData();
+            genSendData();
             byte[] d   = structTransform.StructToBytes(sentData);
             
             byte[] CRC = ComDev.CRC.ModbusCrc16Calc(d);
@@ -404,7 +404,7 @@ namespace ComDev
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            generateSendData();
+            genSendData();
             byte[] d = structTransform.StructToBytes(sentData);
             byte[] CRC = ComDev.CRC.ModbusCrc16Calc(d);
             d[d.Length - 2] = CRC[0];
@@ -439,6 +439,11 @@ namespace ComDev
             }
         }
 
+        /// <summary>
+        /// 添加数据到波形显示
+        /// </summary>
+        /// <param name="sourceId">数据源</param>
+        /// <param name="waveId">波形号</param>
         private void addDataToWave(int sourceId, int waveId)
         {
             switch (sourceId)
