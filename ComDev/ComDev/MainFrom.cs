@@ -83,7 +83,7 @@ namespace ComDev
             string[] PlotNames = {"St00", "St01", "St02", "St03",
                     "St04", "St05", "St06", "St07",
                     "St08", "St09", "St10", "St11",
-                    "St12", "St13", "St14", "St15"};
+                    "St12", "St13", "St14", "St15", "None"};
 
             comboBoxBx1.Items.AddRange(PlotNames);
             comboBoxBx1.SelectedIndex = 0;

@@ -40,3 +40,4 @@ C:\Users\BineanZhou\Desktop\SuperCom\ComDev\ComDev\obj\Debug\ComDev.Properties.R
 C:\Users\BineanZhou\Desktop\SuperCom\ComDev\ComDev\obj\Debug\ComDev.csproj.GenerateResource.Cache
 C:\Users\BineanZhou\Desktop\SuperCom\ComDev\ComDev\obj\Debug\ComDev.exe
 C:\Users\BineanZhou\Desktop\SuperCom\ComDev\ComDev\obj\Debug\ComDev.pdb
+C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Debug\ComDev.csprojResolveAssemblyReference.cache
