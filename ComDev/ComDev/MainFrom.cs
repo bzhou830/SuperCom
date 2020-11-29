@@ -470,14 +470,27 @@ namespace ComDev
         // plot index changed, clear data.
         private void comboBoxPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            clearWaveData();
+            if((sender as ComboBox).Name == "comboBoxBx1")
+            {
+                clearWaveData(0);
+            }
+            else if ((sender as ComboBox).Name == "comboBoxBx2")
+            {
+                clearWaveData(1);
+            }
+            else if ((sender as ComboBox).Name == "comboBoxBx3")
+            {
+                clearWaveData(2);
+            }
+            else if ((sender as ComboBox).Name == "comboBoxBx4")
+            {
+                clearWaveData(3);
+            }
         }
 
-        private void clearWaveData()
+        private void clearWaveData(int i)
         {
-            for(int i = 0; i < 4; i++) {
                 x[i].Clear();
-            }
         }
     }
 }

@@ -22,3 +22,15 @@ C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Release\ComDev.FormUI.resources
 C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Release\ComDev.MainFrom.resources
 C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Release\ComDev.Properties.Resources.resources
 C:\Users\BineanZhou\Desktop\ComDev\ComDev\obj\Release\ComDev.csproj.GenerateResource.Cache
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\bin\Release\ComDev.exe.config
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\obj\Release\ComDev.exe
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\obj\Release\ComDev.pdb
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\bin\Release\ComDev.exe
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\bin\Release\ComDev.pdb
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\bin\Release\ZGraph.dll
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\bin\Release\ZGraph.xml
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\obj\Release\ComDev.FormUI.resources
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\obj\Release\ComDev.MainFrom.resources
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\obj\Release\ComDev.Properties.Resources.resources
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\obj\Release\ComDev.csproj.GenerateResource.Cache
+C:\Users\Bz\Desktop\SuperCom\ComDev\ComDev\obj\Release\ComDev.csprojResolveAssemblyReference.cache
